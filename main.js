@@ -22,81 +22,99 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let humanPick = 'a';
-    do {
-        humanPick = prompt("Write 'r', 'p' or 's' to pick rock, paper or scissors.");
-        log(humanPick);
-    } while (humanPick !== 'r' && humanPick !== 'p' && humanPick !== 's')
+// function getHumanChoice() {
+//     let humanPick = '';
+//     do {
+//         humanPick = prompt("Write 'r', 'p' or 's' to pick rock, paper or scissors.");
+//         log(humanPick);
+//     } while (humanPick !== 'r' && humanPick !== 'p' && humanPick !== 's')
 
         
-    if (humanPick === 'r') {
-        return "rock";
-    } else if (humanPick === 'p') {
-        return "paper";
-    } else {
-        return "scissors";
-    }
-}
+//     if (humanPick === 'r') {
+//         return "rock";
+//     } else if (humanPick === 'p') {
+//         return "paper";
+//     } else {
+//         return "scissors";
+//     }
+// }
 
-function playRound() {
-    do {
+function playRound(humanPick) {
+
     // computerHand means that computer picked rock, paper or scissors;
     var computerHand = getComputerChoice();
     // check what did it pick
     log(computerHand);
     
-    var humanHand = getHumanChoice();
+    var humanHand = humanPick;
+    // check what did it pick
     log(humanHand);
     
+        // If there is a tie
+        if (computerHand === humanHand) {
+            announcements.textContent = "You both picked " + humanHand + ", this is a tie! Try again!";
+            return; // End this round
+        }
     
         if (humanHand === 'rock' && computerHand === 'paper') {
-            log("You lose! Paper beats rock.");
+            announcements.textContent = "You lose! Paper beats rock.";
             computerScore++;
         } else if (humanHand === 'rock' && computerHand === 'scissors') {
-            log("You win! Rock beats scissors.");
+            announcements.textContent = "You win! Rock beats scissors.";
             humanScore++;
         } else if (humanHand === 'paper' && computerHand === 'rock') {
-            log("You win! Paper beats rock.");
+            announcements.textContent = "You win! Paper beats rock.";
             humanScore++;
         } else if (humanHand === 'paper' && computerHand === 'scissors') {
-            log("You lose! Scissors beat paper.");
+            announcements.textContent = "You lose! Scissors beat paper.";
             computerScore++;
         } else if (humanHand === 'scissors' && computerHand === 'rock') {
-            log("You lose! Rock beats scissors.");
+            announcements.textContent = "You lose! Rock beats scissors.";
             computerScore++;
         } else if (humanHand === 'scissors' && computerHand === 'paper') {
-            log("You win! Scissors beat paper.");
+            announcements.textContent = "You win! Scissors beat paper.";
             humanScore++;
         }
         
-        
-        if (computerHand === humanHand) {
-            log("You both picked " + humanHand + ", this is a tie! Try again!");
-        }
-    } while (computerHand === humanHand);
+
+        // Update results
+        result.innerHTML = 
+        `Human = ${humanScore} <br>
+        Computer = ${computerScore}`;
+
+        // Check game state
+        messageForTheWinner();
+
 }
 
-function playGame() {
-    
-    for (let i = 0; i < 5; i++) {
-        playRound();
-        log("Human score: " + humanScore);
-        log("Computer score: " + computerScore);
-        if (humanScore === 3) {
-            log("You won you crazy mothefucker!");
-            break;
-        } else if (computerScore === 3) {
-            log("Damn God, you lost from a bucket of scrap metal.");
-            break;
-        }    
+// Initialize the game state
+function messageForTheWinner() {
+    if (humanScore === 5) {
+        announcements.textContent = "You wooon!";
+        result.textContent = " ";
+    } else if (computerScore === 5) {
+        announcements.textContent = "Computa won!";
+        result.textContent = " ";
     }
-    
 }
+
+
+const buttons = document.querySelectorAll("button");
+const announcements = document.querySelector("#announcements");
+const result = document.querySelector("#result");
 
 var humanScore = 0;
 var computerScore = 0;
 
-playGame();
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.id);
+    })
+    
+})
+
+
+
+
 
 
